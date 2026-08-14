@@ -147,7 +147,7 @@ jobs:
           copy %OUT%\Telegram.exe artifact\
           copy %OUT%\Updater.exe artifact\ || ver > nul
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         name: Upload artifact.
         with:
           name: Telegram_GhostMode_x64

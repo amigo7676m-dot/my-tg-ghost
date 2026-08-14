@@ -12,13 +12,14 @@ jobs:
 
   windows:
     name: Windows
-    runs-on: windows-2022
+    runs-on: windows-latest
 
     strategy:
       fail-fast: false
       matrix:
         arch: [x64]
-        qt: [qt6]
+        qt: [""]
+        generator: [""]
 
     env:
       UPLOAD_ARTIFACT: "true"
@@ -56,10 +57,6 @@ jobs:
 
           sed -i '/CMAKE_${lang}_FLAGS_DEBUG_INIT/s/${_Zi}//' "$PROGRAMFILES"/CMake/share/cmake*/Modules/Platform/Windows-MSVC.cmake
 
-          echo "$(sha256sum $TBUILD/$REPO_NAME/$PREPARE_PATH | awk '{ print $1 }')" >> CACHE_KEY.txt
-          echo "$SDK" >> CACHE_KEY.txt
-          echo "CACHE_KEY=$(sha256sum CACHE_KEY.txt | awk '{ print $1 }')" >> $GITHUB_ENV
-
           echo "Configurate git for cherry-picks."
           git config --global user.email "you@example.com"
           git config --global user.name "Sample"
@@ -69,6 +66,7 @@ jobs:
         with:
           arch: x64
           sdk: ${{ env.SDK }}
+          toolset: 14.44
 
       - name: NuGet sources.
         run: |
@@ -77,7 +75,8 @@ jobs:
 
       - name: Libraries.
         run: |
-          call %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat x64 skip-release silent ${{ matrix.qt }}
+          call %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat x64 skip-release ${{ matrix.qt }}
+          if %errorlevel% neq 0 exit /b %errorlevel%
 
       - name: Read configuration matrix.
         shell: bash
@@ -99,7 +98,7 @@ jobs:
           cd %TBUILD%\%REPO_NAME%\Telegram
 
           call configure.bat ^
-          x64 ^
+          %TDESKTOP_BUILD_ARCH% ^
           ${{ matrix.qt }} ^
           %TDESKTOP_BUILD_API% ^
           -D CMAKE_CONFIGURATION_TYPES=Debug ^

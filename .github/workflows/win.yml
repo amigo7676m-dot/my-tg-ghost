@@ -12,7 +12,7 @@ jobs:
 
   windows:
     name: Windows
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     strategy:
       fail-fast: false
@@ -108,7 +108,8 @@ jobs:
 
       - name: Libraries.
         run: |
-          %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat x64 skip-release silent ${{ matrix.qt }}
+          call %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat x64 skip-release silent ${{ matrix.qt }}
+          if %errorlevel% neq 0 exit /b %errorlevel%
 
       - name: Read configuration matrix.
         shell: bash

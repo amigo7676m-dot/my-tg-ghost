@@ -70,6 +70,9 @@
 [submodule "Telegram/ThirdParty/tgcalls"]
 	path = Telegram/ThirdParty/tgcalls
 	url = https://github.com/telegramdesktop/tgcalls.git
+[submodule "Telegram/ThirdParty/TooManyCooks"]
+	path = Telegram/ThirdParty/TooManyCooks
+	url = https://github.com/tzcnt/TooManyCooks.git
 [submodule "Telegram/ThirdParty/libcbor"]
 	path = Telegram/ThirdParty/libcbor
 	url = https://github.com/PJK/libcbor.git

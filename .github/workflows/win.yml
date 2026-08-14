@@ -12,14 +12,12 @@ jobs:
 
   windows:
     name: Windows
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     strategy:
       fail-fast: false
       matrix:
         arch: [x64]
-        qt: [""]
-        generator: [""]
 
     env:
       UPLOAD_ARTIFACT: "true"
@@ -34,6 +32,7 @@ jobs:
       - name: Prepare directories.
         run: |
           mkdir %userprofile%\TBuild\Libraries
+          mkdir %userprofile%\TBuild\ThirdParty
           mklink /d %GITHUB_WORKSPACE%\TBuild %userprofile%\TBuild
           echo TBUILD=%GITHUB_WORKSPACE%\TBuild>>%GITHUB_ENV%
           echo LibrariesPath=%GITHUB_WORKSPACE%\TBuild\Libraries\win64>>%GITHUB_ENV%
@@ -47,6 +46,11 @@ jobs:
         with:
           submodules: recursive
           path: ${{ env.TBUILD }}\${{ env.REPO_NAME }}
+
+      - name: Install Python dependencies.
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pywin32 requests certifi
 
       - name: First set up.
         shell: bash
@@ -66,7 +70,6 @@ jobs:
         with:
           arch: x64
           sdk: ${{ env.SDK }}
-          toolset: 14.44
 
       - name: NuGet sources.
         run: |
@@ -75,8 +78,8 @@ jobs:
 
       - name: Libraries.
         run: |
-          call %TBUILD%\%REPO_NAME%\Telegram\build\prepare\win.bat x64 skip-release ${{ matrix.qt }}
-          if %errorlevel% neq 0 exit /b %errorlevel%
+          cd %TBUILD%\%REPO_NAME%\Telegram\build\prepare
+          call win.bat x64 skip-release
 
       - name: Read configuration matrix.
         shell: bash
@@ -98,8 +101,7 @@ jobs:
           cd %TBUILD%\%REPO_NAME%\Telegram
 
           call configure.bat ^
-          %TDESKTOP_BUILD_ARCH% ^
-          ${{ matrix.qt }} ^
+          x64 ^
           %TDESKTOP_BUILD_API% ^
           -D CMAKE_CONFIGURATION_TYPES=Debug ^
           -D CMAKE_COMPILE_WARNING_AS_ERROR=OFF ^

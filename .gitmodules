@@ -46,6 +46,12 @@
 [submodule "Telegram/ThirdParty/libtgvoip"]
 	path = Telegram/ThirdParty/libtgvoip
 	url = https://github.com/telegramdesktop/libtgvoip.git
+[submodule "Telegram/ThirdParty/MicroTeX"]
+	path = Telegram/ThirdParty/MicroTeX
+	url = https://github.com/desktop-app/MicroTeX.git
 [submodule "Telegram/ThirdParty/expected-lite"]
 	path = Telegram/ThirdParty/expected-lite
+	url = https://github.com/martinmoene/expected-lite.git
+[submodule "cmake/external/glib/cppgir/expected-lite"]
+	path = cmake/external/glib/cppgir/expected-lite
 	url = https://github.com/martinmoene/expected-lite.git
